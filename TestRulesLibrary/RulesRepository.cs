@@ -16,12 +16,12 @@ namespace TestRulesLibrary
         {
             if (workflowAnalyzerConfigService.HasFeature("WorkflowAnalyzerV4"))
                 return;
-            var forbiddenStringRule = new Rule<IActivityModel>("TestRule", "DE-LIB-001", InspectTestRule);
+            var forbiddenStringRule = new Rule<IActivityModel>("TestRule", "DE-USG-001", InspectTestRule);
             forbiddenStringRule.DefaultErrorLevel = System.Diagnostics.TraceLevel.Error;
-            forbiddenStringRule.Parameters.Add("test_parametrs", new Parameter()
+            forbiddenStringRule.Parameters.Add("test_parameters", new Parameter()
             {
                 DefaultValue = "testDefaultValue",
-                Key = "testParametrKey",
+                Key = "test_parametrs",
                 LocalizedDisplayName = "testDisplayName",
                 
 
@@ -33,7 +33,7 @@ namespace TestRulesLibrary
 
         private InspectionResult InspectTestRule(IActivityModel activityToInspect, Rule configuredRule)
         {
-            var configuredstring = configuredRule.Parameters["testParametrKey"].Value;
+            var configuredstring = configuredRule.Parameters["test_parameters"].Value;
             if (string.IsNullOrWhiteSpace(configuredstring))
             {
                 return new InspectionResult() { HasErrors = false };
