@@ -14,7 +14,7 @@ namespace TestRulesLibrary
     {
         public void Initialize(IAnalyzerConfigurationService workflowAnalyzerConfigService)
         {
-            if (workflowAnalyzerConfigService.HasFeature("WorkflowAnalyzerV4"))
+            if (!workflowAnalyzerConfigService.HasFeature("WorkflowAnalyzerV4"))
                 return;
             var forbiddenStringRule = new Rule<IActivityModel>("TestRule", "DE-USG-001", InspectTestRule);
             forbiddenStringRule.DefaultErrorLevel = System.Diagnostics.TraceLevel.Error;
@@ -23,8 +23,6 @@ namespace TestRulesLibrary
                 DefaultValue = "testDefaultValue",
                 Key = "test_parametrs",
                 LocalizedDisplayName = "testDisplayName",
-                
-
             });
 
             workflowAnalyzerConfigService.AddRule<IActivityModel>(forbiddenStringRule);
@@ -33,7 +31,7 @@ namespace TestRulesLibrary
 
         private InspectionResult InspectTestRule(IActivityModel activityToInspect, Rule configuredRule)
         {
-            var configuredstring = configuredRule.Parameters["test_parameters"].Value;
+            var configuredstring = configuredRule.Parameters["test_parameters"]?.Value;
             if (string.IsNullOrWhiteSpace(configuredstring))
             {
                 return new InspectionResult() { HasErrors = false };
@@ -58,6 +56,7 @@ namespace TestRulesLibrary
             }
 
             if (messageList.Count > 0)
+            {
                 return new InspectionResult()
                 {
                     HasErrors = true,
@@ -65,8 +64,8 @@ namespace TestRulesLibrary
                     RecommendationMessage = "Fix your test project",
                     ErrorLevel = configuredRule.ErrorLevel
                 };
+            }
             return new InspectionResult() { HasErrors = false };
         }
-
     }
 }
